@@ -1,6 +1,7 @@
 "use client";
 
 import { userState } from "@/app/recoil/atoms";
+import Link from "next/link";
 import { useRecoilState } from "recoil";
 
 export default function UserUpdatePage() {
@@ -25,6 +26,7 @@ export default function UserUpdatePage() {
           setUser((prev) => ({ ...prev, name: event.target.value }))
         }
       />
+      <Link href="/users/updated-user">Update!</Link>
     </div>
   );
 }
