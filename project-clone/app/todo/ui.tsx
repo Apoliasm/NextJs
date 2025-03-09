@@ -19,7 +19,6 @@ export default function UI() {
       createTodo({
         title: "New Todo",
         completed: false,
-        updated_at: new Date().toISOString(),
       }),
 
     onSuccess: () => {

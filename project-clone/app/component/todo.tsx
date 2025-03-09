@@ -10,6 +10,15 @@ export default function Todo({ todo }) {
   const [isEditing, setIsEditing] = useState(false);
   const [completed, setCompleted] = useState(todo.completed);
   const [title, setTitle] = useState(todo.title);
+  const [createdDate, setCreatedDate] = useState<string>(
+    new Date(todo.created_at).toLocaleTimeString()
+  );
+  const [updatedDate, setUpdatedDate] = useState<string>(
+    new Date(todo.updated_at).toLocaleTimeString()
+  );
+  const [completedDate, setCompletedDate] = useState<string | null>(
+    new Date(todo.completed_at).toLocaleTimeString()
+  );
 
   const updateTodoMutation = useMutation({
     mutationFn: () =>
@@ -17,6 +26,7 @@ export default function Todo({ todo }) {
         id: todo.id,
         title,
         completed,
+        completed_at: new Date().toISOString(),
       }),
     onSuccess: () => {
       setIsEditing(false);
@@ -40,6 +50,7 @@ export default function Todo({ todo }) {
       <Checkbox
         checked={completed}
         onChange={async (e) => {
+          setCompletedDate(new Date().toLocaleTimeString());
           await setCompleted(e.target.checked);
           await updateTodoMutation.mutate();
         }}
@@ -52,7 +63,20 @@ export default function Todo({ todo }) {
           onChange={(e) => setTitle(e.target.value)}
         />
       ) : (
-        <p className={`flex-1 ${completed && "line-through"}`}>{title}</p>
+        <div className="flex flex-1 flex-col gap-1">
+          <p className={`${completed && "line-through"}`}>{title}</p>
+          {completed ? (
+            <p className=" text-gray-500 text-sm">
+              {" "}
+              completed: {completedDate}{" "}
+            </p>
+          ) : (
+            <div>
+              <p className=" text-gray-500 text-sm">created : {createdDate}</p>
+              <p className="text-gray-500 text-sm">updated : {updatedDate}</p>
+            </div>
+          )}
+        </div>
       )}
 
       {isEditing ? (
