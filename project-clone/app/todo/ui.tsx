@@ -1,16 +1,53 @@
 "use client";
 
 import { Button, Input } from "@material-tailwind/react";
-import Todo from "./component/todo";
+import { useMutation, useQuery } from "@tanstack/react-query";
+import { createTodo, getTodos } from "actions/todo-actions";
+import Todo from "app/component/todo";
+import { useState } from "react";
+
 export default function UI() {
+  const [searchInput, setSearchInput] = useState("");
+
+  const todosQuery = useQuery({
+    queryKey: ["todos"],
+    queryFn: () => getTodos({ searchInput }),
+  });
+
+  const createTodoMutation = useMutation({
+    mutationFn: () =>
+      createTodo({
+        title: "New Todo",
+        completed: false,
+        updated_at: new Date().toISOString(),
+      }),
+
+    onSuccess: () => {
+      todosQuery.refetch();
+    },
+  });
+
   return (
-    <div className="w-2/3 mx-auto flex flex-col py-10 gap-2 items-center">
-      <div className="text-xl text-center">Todo Main</div>
-      <Input className="w-full" variant="outlined" placeholder="Add a todo" />
-      <Todo />
-      <Button className="align-middle bg-black px-3 rounded-lg">
-        <i className="fas fa-plus mr-2 text-white" />
-        Add Todo
+    <div className="w-2/3 mx-auto flex flex-col items-center py-10 gap-2">
+      <h1 className="text-xl">TODO LIST</h1>
+
+      <Input
+        label="Search TODO"
+        placeholder="Search TODO"
+        icon={<i className="fas fa-search" />}
+        value={searchInput}
+        onChange={(e) => setSearchInput(e.target.value)}
+      />
+
+      {todosQuery.isPending && <p>Loading...</p>}
+      {todosQuery.data &&
+        todosQuery.data.map((todo) => <Todo key={todo.id} todo={todo} />)}
+      <Button
+        onClick={() => createTodoMutation.mutate()}
+        loading={createTodoMutation.isPending}
+      >
+        <i className="fas fa-plus mr-2" />
+        ADD TODO
       </Button>
     </div>
   );
