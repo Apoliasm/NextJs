@@ -2,8 +2,8 @@
 
 import { Checkbox, IconButton, Spinner } from "@material-tailwind/react";
 import { useMutation } from "@tanstack/react-query";
-import { deleteTodo, updateTodo } from "actions/todo-actions";
-import { queryClient } from "../../config /ReactQueryClientProvider";
+import { deleteTodo, updateTodo } from "actions/todo/todo-actions";
+import { queryClient } from "../../../config /ReactQueryClientProvider";
 import { useState } from "react";
 
 export default function Todo({ todo }) {

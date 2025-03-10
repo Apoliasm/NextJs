@@ -2,11 +2,11 @@
 
 import { Button, Input } from "@material-tailwind/react";
 import { useMutation, useQuery } from "@tanstack/react-query";
-import { createTodo, getTodos } from "actions/todo-actions";
-import Todo from "app/component/todo";
+import { createTodo, getTodos } from "actions/todo/todo-actions";
+import Todo from "app/todo/component/todo";
 import { useState } from "react";
 
-export default function UI() {
+export default function TodoUI() {
   const [searchInput, setSearchInput] = useState("");
 
   const todosQuery = useQuery({
